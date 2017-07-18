@@ -105,12 +105,12 @@
         var b = Math.floor(Math.random() * 256);
         return "rgb(" + r + "," + g + "," + b + ")";
     }
-    //方法二：十六进制
+    //方法二：十六进制（高端方法）
     function color2() {
         return "#" + function (color) {
                 //生成随机十六进制的数
                 return new Array(7-color.length).join("0")+ color
-            }((Math.random() * 0x1000000 << 0).toString(16));
+            }((Math.random() * 0x1000000 << 0).toString(16));//移位运算符=>转换16进制
     }
     // new Array(7-color.length).join("0")   创建一个长度为7-color.length的空数组 并用"0"拼接
     //console.log();
