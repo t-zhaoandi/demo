@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>图片懒加载</title>
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: #434343;
+        }
+
+        #box {
+            width: 980px;
+            /*height:400px;*/
+            background: #2D2D2D;
+            border-radius: 10px;
+            margin: 50px auto;
+            overflow: hidden;
+        }
+
+        #box img {
+            /*display: block;*/
+            float: left;
+            margin: 15px;
+            border: 1px solid #cccccc;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        #box img:hover {
+            opacity: 0.5; /*改变透明度*/
+        }
+
+        /*
+            网站性能优化：
+            1.能不向服务器请求的就不向服务器请求
+            2.能用css实现的效果就不用js
+         */
+    </style>
+    <script src="js/jquery-1.11.3.min.js"></script>
+    <script src="js/jquery.lazyload.min.js"></script>
+
+
+</head>
+<body>
+<div id="box">
+    <!--img标签四要素 src(路径) width height alt(解释说明 用于搜索引擎的关键字)-->
+    <img src="../img/index_03/img_00.png" class="lazy" data-original="../img/index_03/img_01.jpg" width="458"
+         height="270" title="img_01" alt="">
+    <img src="../img/index_03/img_00.png" class="lazy" data-original="../img/index_03/img_02.jpg" width="458"
+         height="270" title="img_01" alt="">
+    <img src="../img/index_03/img_00.png" class="lazy" data-original="../img/index_03/img_03.jpg" width="458"
+         height="270" title="img_01" alt="">
+    <img src="../img/index_03/img_00.png" class="lazy" data-original="../img/index_03/img_04.jpg" width="458"
+         height="270" title="img_01" alt="">
+    <img src="../img/index_03/img_00.png" class="lazy" data-original="../img/index_03/img_05.jpg" width="458"
+         height="270" title="img_01" alt="">
+    <img src="../img/index_03/img_00.png" class="lazy" data-original="../img/index_03/img_06.jpg" width="458"
+         height="270" title="img_01" alt="">
+    <img src="../img/index_03/img_00.png" class="lazy" data-original="../img/index_03/img_07.jpg" width="458"
+         height="270" title="img_01" alt="">
+    <img src="../img/index_03/img_00.png" class="lazy" data-original="../img/index_03/img_08.jpg" width="458"
+         height="270" title="img_01" alt="">
+    <img src="../img/index_03/img_00.png" class="lazy" data-original="../img/index_03/img_09.jpg" width="458"
+         height="270" title="img_01" alt="">
+    <img src="../img/index_03/img_00.png" class="lazy" data-original="../img/index_03/img_10.jpg" width="458"
+         height="270" title="img_01" alt="">
+    <img src="../img/index_03/img_00.png" class="lazy" data-original="../img/index_03/img_11.jpg" width="458"
+         height="270" title="img_01" alt="">
+    <img src="../img/index_03/img_00.png" class="lazy" data-original="../img/index_03/img_12.jpg" width="458"
+         height="270" title="img_01" alt="">
+    <img src="../img/index_03/img_00.png" class="lazy" data-original="../img/index_03/img_06.jpg" width="458"
+         height="270" title="img_01" alt="">
+    <img src="../img/index_03/img_00.png" class="lazy" data-original="../img/index_03/img_07.jpg" width="458"
+         height="270" title="img_01" alt="">
+    <img src="../img/index_03/img_00.png" class="lazy" data-original="../img/index_03/img_08.jpg" width="458"
+         height="270" title="img_01" alt="">
+    <img src="../img/index_03/img_00.png" class="lazy" data-original="../img/index_03/img_09.jpg" width="458"
+         height="270" title="img_01" alt="">
+    <img src="../img/index_03/img_00.png" class="lazy" data-original="../img/index_03/img_10.jpg" width="458"
+         height="270" title="img_01" alt="">
+    <img src="../img/index_03/img_00.png" class="lazy" data-original="../img/index_03/img_11.jpg" width="458"
+         height="270" title="img_01" alt="">
+    <img src="../img/index_03/img_00.png" class="lazy" data-original="../img/index_03/img_12.jpg" width="458"
+         height="270" title="img_01" alt="">
+    <img src="../img/index_03/img_00.png" class="lazy" data-original="../img/index_03/img_01.jpg" width="458"
+         height="270" title="img_01" alt="">
+    <img src="../img/index_03/img_00.png" class="lazy" data-original="../img/index_03/img_02.jpg" width="458"
+         height="270" title="img_01" alt="">
+    <img src="../img/index_03/img_00.png" class="lazy" data-original="../img/index_03/img_03.jpg" width="458"
+         height="270" title="img_01" alt="">
+    <img src="../img/index_03/img_00.png" class="lazy" data-original="../img/index_03/img_04.jpg" width="458"
+         height="270" title="img_01" alt="">
+    <img src="../img/index_03/img_00.png" class="lazy" data-original="../img/index_03/img_05.jpg" width="458"
+         height="270" title="img_01" alt="">
+    <img src="../img/index_03/img_00.png" class="lazy" data-original="../img/index_03/img_01.jpg" width="458"
+         height="270" title="img_01" alt="">
+
+
+</div>
+<script type="text/javascript">
+    //    var lazyload=$.noConflict();
+    //    lazyload(function(){
+    //       lazyload("img").lazyload({
+    //           placeholder:"../img/index_03/img_00.png"
+    //       })
+    //    });
+    var e = {
+        threshold: 200,
+        effect: "fadeIn",
+        failure_limit: 10
+    };
+    $(function () {
+        $("img.lazy").lazyload();
+    })
+</script>
+
+</body>
+</html>
