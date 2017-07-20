@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>3D轮播器</title>
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: #666;
+        }
+
+        #box {
+            position: relative; /*相对定位：相对于自己本身的位置定位*/
+            width: 990px;
+            height: 230px;
+            background: #cccccc;
+            margin: 100px auto;
+        }
+
+        #box ul li {
+            position: absolute; /*绝对定位:相对于拥有定位属性的最近父元素*/
+            left: 225px;
+            top: 0;
+            list-style: none;
+            width: 540px;
+            height: 230px;
+            z-index: 1;
+        }
+
+        #box ul li.center {
+            width: 640px;
+            height: 270px;
+            z-index: 12; /*层级：只有定位元素才能设置 越大越靠前*/
+            left: 175px;
+            top: -20px;
+        }
+
+        #box ul li.right {
+            left: 450px;
+            top: 0;
+            z-index: 5;
+        }
+
+        #box ul li.last {
+            left: 0;
+            top: 0;
+            z-index: 6;
+        }
+
+        .btn div {
+            position: absolute;
+            top: 40%;
+            width: 45px;
+            height: 45px;
+            z-index: 20;
+        }
+
+        .btn .left {
+
+        }
+
+        .btn .right {
+            right: 0;
+        }
+
+        .btn i {
+            color: #ccc;
+        }
+
+    </style>
+    <link rel="stylesheet" href="js/font-awesome-4.7.0/css/font-awesome.min.css">
+    <script src="js/jquery-1.11.3.min.js"></script>
+</head>
+<body>
+<div id="box">
+    <ul>
+        <li class="center"><img src="../img/index_03/img_01.jpg" width="100%" height="100%" alt=""></li>
+        <li class="right"><img src="../img/index_03/img_02.jpg" width="100%" height="100%" alt=""></li>
+        <li><img src="../img/index_03/img_03.jpg" width="100%" height="100%" alt=""></li>
+        <li><img src="../img/index_03/img_04.jpg" width="100%" height="100%" alt=""></li>
+        <li><img src="../img/index_03/img_05.jpg" width="100%" height="100%" alt=""></li>
+        <li><img src="../img/index_03/img_06.jpg" width="100%" height="100%" alt=""></li>
+        <li><img src="../img/index_03/img_07.jpg" width="100%" height="100%" alt=""></li>
+        <li><img src="../img/index_03/img_08.jpg" width="100%" height="100%" alt=""></li>
+        <li><img src="../img/index_03/img_09.jpg" width="100%" height="100%" alt=""></li>
+        <li><img src="../img/index_03/img_10.jpg" width="100%" height="100%" alt=""></li>
+        <li><img src="../img/index_03/img_11.jpg" width="100%" height="100%" alt=""></li>
+        <li class="last"><img src="../img/index_03/img_12.jpg" width="100%" height="100%" alt=""></li>
+    </ul>
+    <div class="btn">
+        <div class="left"><i class="fa fa-chevron-left fa-3x"></i></div>
+        <div class="right"><i class="fa fa-chevron-right fa-3x"></i></div>
+    </div>
+</div>
+<script type="text/javascript">
+    var flag = false;
+
+    $(".btn .left").click(function () {
+        if (flag) {
+            return;
+        }
+        flag = true;
+        move(true);
+    });
+    $(".btn .right").click(function () {
+        if (flag) {
+            return;
+        }
+        flag = true;
+        move(false);
+    });
+    function move(direction) {
+        //获取每个li的宽高 层级 定位置
+        var arrW = [], arrH = [], arrZ = [], arrT = [], arrL = [];
+        $("#box ul li").each(function (i) {
+            arrW[i] = $(this).css("width");
+            arrH[i] = $(this).css("height");
+            arrZ[i] = $(this).css("z-index");
+            arrT[i] = $(this).css("top");
+            arrL[i] = $(this).css("left");
+        });
+        //交换
+        $("#box ul li").each(function (i) {
+            var n;
+            if (direction) {
+                n = i - 1;
+                if (n < 0) {
+                    n = 11;
+                }
+            } else {
+                n = i + 1;
+                if (n > 11) {
+                    n = 0;
+                }
+            }
+            $(this).css("z-index", arrZ[n]);
+            $(this).animate({
+                width: arrW[n],
+                height: arrH[n],
+                left: arrL[n],
+                top: arrT[n]
+            }, 500, function () {
+                //动画完成之后再执行
+                flag = false;
+            });
+        });
+        console.log(arrL);
+    }
+</script>
+</body>
+</html>
