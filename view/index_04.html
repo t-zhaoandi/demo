@@ -144,7 +144,7 @@
                 left: arrL[n],
                 top: arrT[n]
             }, 500, function () {
-                //动画完成之后再执行
+                //动画完成之后再执行  防止动画未完成连续点击切图BUG
                 flag = false;
             });
         });
