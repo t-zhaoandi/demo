@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>原生js封装jsonp实现实时翻译</title>
+
+</head>
+<style type="text/css">
+    * {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    body {
+        background: #ccc;
+    }
+
+    .wrap {
+        margin: 100px auto;
+        width: 900px;
+        height: 500px;
+        box-shadow: 0 0 4px #ccc;
+        background: #ffffff;
+        padding: 10px;
+        border-radius: 10px;
+    }
+
+    .wrap .language {
+        position: relative;
+        width: 100px;
+        height: 30px;
+        padding: 0 30px;
+        margin: 20px;
+        text-align: center;
+        line-height: 30px;
+        border: 1px solid #434343;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+
+    .wrap .language .languages {
+        position: absolute;
+        top: 30px;
+        left: -1px;
+        width: 354px;
+        height: auto;
+        border: 1px solid #434343;
+        cursor: pointer;
+        display: none;
+        background: #fff;
+        color: #fff;
+        line-height: 40px;
+    }
+
+    .wrap .language .languages ul li {
+        float: left;
+        width: 78px;
+        height: 40px;
+        margin: 4px;
+        border: 1px dashed #ccc;
+        background: #3366cc;
+        border-radius: 5px;
+    }
+
+    .wrap .input, .wrap .show {
+        width: 430px;
+        height: 200px;
+        float: left;
+        background: #fff;
+        color: #000;
+        margin: 10px;
+        box-shadow: 0 0 4px #222;
+        color: #333;
+        font-family: '微软雅黑';
+        line-height: 40px;
+        font-size: 20px;
+        text-indent: 10px; /*首行缩进*/
+    }
+
+    .wrap .input textarea {
+        border: 0;
+        resize: none;
+        outline: 0;
+        z-index: 3;
+        color: #333;
+        font-family: '微软雅黑';
+        margin: 0;
+        padding: 0;
+        line-height: 40px;
+        font-size: 20px;
+        height: 100%;
+        width: 400px;
+        text-indent: 10px; /*首行缩进*/
+    }
+
+    .wrap span.btn {
+        width: 140px;
+        height: 30px;
+        line-height: 30px;
+        text-align: center;
+        float: right;
+        margin: 10px;
+        background: #3366cc;
+        box-shadow: 0 0 4px #ccc;
+        border-radius: 5px;
+        color: #fff;
+        cursor: pointer;
+    }
+</style>
+<body>
+<div class="wrap">
+    <div class="language">
+        <span>自动检测</span>
+        <div class="languages">
+            <ul>
+                <li data-ln="zh">中文</li>
+                <li data-ln="en">英语</li>
+                <li data-ln="yue">粤语</li>
+                <li data-ln="jp">日语</li>
+                <li data-ln="kor">韩语</li>
+                <li data-ln="fra">法语</li>
+                <li data-ln="spa">西班牙语</li>
+                <li data-ln="ru">俄语</li>
+                <li data-ln="pl">波兰语</li>
+                <li data-ln="fin">芬兰语</li>
+            </ul>
+        </div>
+    </div>
+    <div class="input">
+        <textarea name="text" id="text" cols="30" rows="10"></textarea>
+    </div>
+    <div class="show"></div>
+    <span class="translate btn">点击翻译</span>
+    <span class="empty btn">清空</span>
+</div>
+<script src="js/jquery-1.11.3.min.js"></script>
+<script src="js/jQuery.md5.js"></script>
+<script type="text/javascript">
+    var show = document.querySelector('.show');
+    (function () {
+        /*最新的原生js选择器 兼容ie8*/
+        var text = document.querySelector('#text');
+
+        var translate = document.querySelector('span.translate');
+        var empty = document.querySelector('span.empty');
+        /*翻译语言*/
+        var lan = 'zh';
+        /*输入文本*/
+        var str;
+        var timer = null;
+        //点击翻译事件
+        translate.onclick = trans;
+        text.onkeydown = function () {
+            clearTimeout(timer);
+            timer = setTimeout(function () {
+                trans();
+            }, 500);
+
+        };
+        function trans(lanx) {
+            if (text.value && text.value.length > 0) {
+                var pat = /[^a-zA-Z0-9]\_\s*\u4e00-\u9fa5/g;
+                var strText = text.value;
+                if (pat.test(strText) === true) {
+                    str = strText.replace(pat, '');
+                } else {
+                    str = text.value;
+                }
+                var to = lanx ? lanx : lan;
+                console.log(to);
+                //访问api帐号
+                var appid = '2015063000000001';
+                //访问api密码
+                var key = '12345678';
+                var query = str;
+                //获取当前时间戳
+                var salt = Date.now();
+                var str1 = appid + query + salt + key;
+                var sign = $.md5(str1);
+//                var sign=    MD5(str1);
+                var from = 'auto';
+
+                jsonP({
+                    url: 'http://api.fanyi.baidu.com/api/trans/vip/translate',
+                    method: 'GET',
+                    dataType: 'JSONP',
+                    data: {
+                        q: query,
+                        appid: appid,
+                        salt: salt,
+                        from: from,
+                        to: to,
+                        sign: sign
+                    }
+                });
+            }
+
+        }
+
+        function jsonP(opt) {
+            opt = opt || {};
+            opt.method = opt.method || 'post';
+            opt.url = opt.url || '';
+            opt.data = opt.data || null;
+            opt.dataType = opt.dataType || 'JSONP';
+            var params = [];
+            //解析json数据格式
+            for (var key in opt.data) {
+                params.push(key + '=' + opt.data[key]);
+            }
+            var postData = params.join('&');
+            if (opt.dataType === 'JSONP') {
+                createScript(opt.url, postData);
+            }
+
+        }
+
+        function createScript(url, data) {
+            var oScript = document.createElement('script');
+            oScript.src = url + '?' + data + '&callback=getR';
+            document.body.appendChild(oScript);
+        }
+
+        choose();
+        function choose() {
+
+            var $lan = $('.language');
+            var $lans = $('.languages ul li');
+            $lan.click(function () {
+                $('.languages').slideToggle(600);
+            });
+            $lans.click(function () {
+                lan = $(this).data('ln');
+                /*jq对象转换为js对象*/
+                $lan[0].children[0].innerHTML = $(this).text();
+                trans(lan);
+            });
+        }
+    })();
+
+    function getR(res) {
+        console.log(res);
+        show.innerHTML = res.trans_result[0].dst;
+
+    }
+
+</script>
+<!--<script src="http://api.fanyi.baidu.com/api/trans/vip/translate?q=apple&from=en&to=zh&appid=2015063000000001&salt=1435660288&sign=f89f9594663708c1605f3d736d01d2d4&callback=getR"></script>-->
+
+</body>
+</html>
